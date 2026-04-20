@@ -40,7 +40,7 @@ export default function ProductSpotlight() {
 
   return (
     <section
-      className="relative py-52 overflow-hidden"
+      className="relative py-24 md:py-52 overflow-hidden"
       style={{ background: '#050507' }}
     >
       {/* Animated bg glow */}

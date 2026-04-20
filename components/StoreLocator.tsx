@@ -15,7 +15,7 @@ export default function StoreLocator() {
   return (
     <section
       id="find-us"
-      className="relative py-52 overflow-hidden"
+      className="relative py-24 md:py-52 overflow-hidden"
       style={{ background: 'linear-gradient(180deg, #000 0%, #0a0000 50%, #000 100%)' }}
     >
       <div

@@ -12,7 +12,7 @@ const links = {
 
 export default function Footer() {
   return (
-    <footer className="relative pt-36 pb-12 overflow-hidden" style={{ background: '#050507' }}>
+    <footer className="relative pt-20 md:pt-36 pb-10 overflow-hidden" style={{ background: '#050507' }}>
       {/* Top border */}
       <div className="w-full h-px mb-24" style={{ background: 'linear-gradient(90deg, transparent, rgba(232,0,29,0.4), rgba(212,175,55,0.2), transparent)' }} />
 

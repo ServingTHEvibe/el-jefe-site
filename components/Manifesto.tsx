@@ -39,15 +39,15 @@ const stats = [
 
 export default function Manifesto() {
   return (
-    <section className="relative overflow-hidden py-56" style={{ background: '#050507' }}>
+    <section className="relative overflow-hidden py-24 md:py-56" style={{ background: '#050507' }}>
       {/* Marquee — full bleed */}
-      <div className="mb-40 -mx-4">
+      <div className="mb-16 md:mb-40 -mx-4">
         <MarqueeRow />
         <MarqueeRow reverse />
       </div>
 
       {/* Core statement */}
-      <div className="px-10 md:px-20 mb-36">
+      <div className="px-10 md:px-20 mb-16 md:mb-36">
         <motion.div
           className="max-w-4xl"
           initial={{ opacity: 0, y: 50 }}

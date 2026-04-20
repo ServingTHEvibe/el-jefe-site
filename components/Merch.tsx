@@ -40,15 +40,15 @@ export default function Merch() {
   return (
     <section
       id="merch"
-      className="relative py-52 overflow-hidden"
+      className="relative py-24 md:py-52 overflow-hidden"
       style={{ background: '#050507' }}
     >
       {/* Gold top border */}
-      <div className="w-full h-px mb-24" style={{ background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.35), transparent)' }} />
+      <div className="w-full h-px mb-12 md:mb-24" style={{ background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.35), transparent)' }} />
 
       <div className="px-10 md:px-20">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-24">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12 md:mb-24">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}

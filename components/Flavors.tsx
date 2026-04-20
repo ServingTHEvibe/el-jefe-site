@@ -16,10 +16,10 @@ const flavors = [
 
 export default function Flavors() {
   return (
-    <section id="flavors" className="relative py-52 overflow-hidden" style={{ background: '#050507' }}>
+    <section id="flavors" className="relative py-24 md:py-52 overflow-hidden" style={{ background: '#050507' }}>
 
       {/* Section header */}
-      <div className="px-10 md:px-20 mb-28">
+      <div className="px-10 md:px-20 mb-14 md:mb-28">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

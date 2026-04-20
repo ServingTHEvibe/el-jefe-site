@@ -60,7 +60,7 @@ export default function ScrollingCan() {
 
   return (
     <motion.div
-      className="fixed z-40 pointer-events-none"
+      className="fixed z-40 pointer-events-none hidden md:block"
       style={{
         left: x,
         top: y,
