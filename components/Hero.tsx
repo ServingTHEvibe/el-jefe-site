@@ -19,7 +19,7 @@ export default function Hero() {
         className="absolute inset-0 w-full h-full object-cover"
         style={{ opacity: 0.45 }}
       >
-        <source src="/hf_20260419_221442_d316a310-edad-486a-9f37-6f8d8af0043c.mp4" type="video/mp4" />
+        <source src="/hf_20260420_004249_b9ee5039-6bcf-47c8-a74a-56a5158936f7 (1).mp4" type="video/mp4" />
       </video>
 
       {/* Dark vignette over video so text stays readable */}
