@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 
 const links = {
@@ -20,16 +21,14 @@ export default function Footer() {
 
           {/* Brand column */}
           <div className="lg:col-span-2 flex flex-col gap-6">
-            <div>
-              <span
-                className="font-black tracking-wider uppercase"
-                style={{ fontSize: 'clamp(1.75rem, 2.5vw, 2.5rem)', color: '#E8001D' }}
-              >
-                EL JEFE
-              </span>
-              <span className="block text-xs font-semibold tracking-widest uppercase mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                ENERGY
-              </span>
+            <div className="relative" style={{ width: 180, height: 64 }}>
+              <Image
+                src="https://www.eljefe.com/cdn/shop/files/El_Jefe_Energy_logo-white_transparent.png"
+                alt="El Jefe Energy"
+                fill
+                className="object-contain object-left"
+                sizes="180px"
+              />
             </div>
             <p className="text-base max-w-xs" style={{ color: 'rgba(255,255,255,0.35)', lineHeight: 1.8 }}>
               Fuel for the Fearless. Crafted for those who lead, dominate, and never ask permission.
