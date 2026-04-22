@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 export default function Hero() {
   return (
     <section
-      id="hero"
+      id="drinks"
       className="relative min-h-screen flex flex-col"
       style={{ background: '#050507' }}
     >
@@ -22,7 +22,7 @@ export default function Hero() {
         <source src="/hf_20260420_004249_b9ee5039-6bcf-47c8-a74a-56a5158936f7 (1).mp4" type="video/mp4" />
       </video>
 
-      {/* Dark vignette over video so text stays readable */}
+      {/* Dark vignette */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -30,7 +30,7 @@ export default function Hero() {
         }}
       />
 
-      {/* Top eyebrow — mono */}
+      {/* Top eyebrow */}
       <motion.div
         className="relative z-10 flex items-center justify-between px-12 pt-28"
         initial={{ opacity: 0 }}
@@ -39,27 +39,35 @@ export default function Hero() {
       >
         <div className="flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-          <span style={{
-            fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-            fontSize: '10px', letterSpacing: '0.2em',
-            color: '#e63030', textTransform: 'uppercase',
-          }}>
+          <span
+            style={{
+              fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
+              fontSize: '10px',
+              letterSpacing: '0.2em',
+              color: '#e63030',
+              textTransform: 'uppercase',
+            }}
+          >
             Energy — Est. 2022
           </span>
         </div>
-        <span style={{
-          fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-          fontSize: '10px', letterSpacing: '0.15em',
-          color: '#3a3a4a', textTransform: 'uppercase',
-        }}>
+        <span
+          style={{
+            fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
+            fontSize: '10px',
+            letterSpacing: '0.15em',
+            color: '#3a3a4a',
+            textTransform: 'uppercase',
+          }}
+        >
           Fuel for the Fearless
         </span>
       </motion.div>
 
-      {/* CENTER — all content centered */}
+      {/* Center content */}
       <div className="relative z-10 flex flex-col items-center justify-center flex-1 px-8 pb-32 text-center">
 
-        {/* Large logo */}
+        {/* Logo */}
         <motion.div
           className="relative mb-10"
           style={{ width: 'clamp(260px, 42vw, 600px)', aspectRatio: '2.6 / 1' }}
@@ -67,9 +75,10 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="absolute inset-0 blur-3xl opacity-20 scale-110" style={{
-            background: 'radial-gradient(circle, rgba(230,48,48,0.8) 0%, transparent 65%)',
-          }} />
+          <div
+            className="absolute inset-0 blur-3xl opacity-20 scale-110"
+            style={{ background: 'radial-gradient(circle, rgba(230,48,48,0.8) 0%, transparent 65%)' }}
+          />
           <Image
             src="https://www.eljefe.com/cdn/shop/files/El_Jefe_Energy_logo-white_transparent.png"
             alt="El Jefe Energy"
@@ -80,7 +89,7 @@ export default function Hero() {
           />
         </motion.div>
 
-        {/* Supporting taglines */}
+        {/* Taglines */}
         <div className="overflow-hidden mb-1">
           <motion.p
             style={{
@@ -117,30 +126,40 @@ export default function Hero() {
           </motion.p>
         </div>
 
-        {/* Sub + CTAs */}
+        {/* CTAs */}
         <motion.div
           className="flex flex-col items-center gap-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
-          <p style={{
-            fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
-            fontSize: '14px', fontWeight: 300,
-            color: '#7a7a8c', lineHeight: 1.7, maxWidth: '360px',
-          }}>
+          <p
+            style={{
+              fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
+              fontSize: '14px',
+              fontWeight: 300,
+              color: '#7a7a8c',
+              lineHeight: 1.7,
+              maxWidth: '360px',
+            }}
+          >
             Fearless. Unapologetic. Refined. For those who lead,
             dominate, and never ask permission.
           </p>
 
           <div className="flex items-center gap-5">
             <motion.a
-              href="#flavors"
+              href="https://www.eljefe.com/collections/energy-drinks"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-                fontSize: '9px', letterSpacing: '0.15em',
-                textTransform: 'uppercase', padding: '12px 24px',
-                background: '#ffffff', color: '#000000',
+                fontSize: '9px',
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                padding: '12px 24px',
+                background: '#ffffff',
+                color: '#000000',
               }}
               whileHover={{ background: '#e8e8ec', translateY: -1 }}
               whileTap={{ scale: 0.97 }}
@@ -151,7 +170,8 @@ export default function Hero() {
               href="#find-us"
               style={{
                 fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-                fontSize: '9px', letterSpacing: '0.15em',
+                fontSize: '9px',
+                letterSpacing: '0.15em',
                 textTransform: 'uppercase',
                 color: '#7a7a8c',
               }}
@@ -163,7 +183,7 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Scroll line — right side */}
+      {/* Scroll indicator */}
       <motion.div
         className="absolute bottom-10 right-12 flex flex-col items-center gap-3"
         initial={{ opacity: 0 }}
@@ -171,16 +191,26 @@ export default function Hero() {
         transition={{ duration: 1, delay: 1.2 }}
       >
         <motion.div
-          style={{ width: '1px', height: '80px', background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.2), transparent)' }}
+          style={{
+            width: '1px',
+            height: '80px',
+            background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.2), transparent)',
+          }}
           animate={{ scaleY: [0.5, 1, 0.5] }}
           transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
         />
-        <span style={{
-          fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-          fontSize: '9px', letterSpacing: '0.15em',
-          color: '#3a3a4a', textTransform: 'uppercase',
-          writingMode: 'vertical-rl',
-        }}>Scroll</span>
+        <span
+          style={{
+            fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
+            fontSize: '9px',
+            letterSpacing: '0.15em',
+            color: '#3a3a4a',
+            textTransform: 'uppercase',
+            writingMode: 'vertical-rl',
+          }}
+        >
+          Scroll
+        </span>
       </motion.div>
     </section>
   )
