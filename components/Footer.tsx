@@ -4,17 +4,48 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 
 const links = {
-  Products: ['Energy Drinks', 'Variety Packs', 'Merchandise', 'New Arrivals'],
-  Company: ['About El Jefe', 'Our Story', 'Careers', 'Press'],
-  Support: ['Store Locator', 'Contact Us', 'FAQ', 'Shipping'],
-  Legal: ['Privacy Policy', 'Terms of Use', 'Cookie Policy'],
+  Products: [
+    { label: 'Energy Drinks', href: 'https://www.eljefe.com/collections/energy-drinks' },
+    { label: 'Variety Packs', href: 'https://www.eljefe.com/products/the-boss-7-5-power-pack' },
+    { label: 'Merchandise', href: 'https://www.eljefe.com/collections/merchandise' },
+    { label: 'New Arrivals', href: 'https://www.eljefe.com/collections/all' },
+  ],
+  Company: [
+    { label: 'About El Jefe', href: '#about' },
+    { label: 'Our Story', href: '#about' },
+    { label: 'Careers', href: 'https://www.eljefe.com/pages/contact' },
+    { label: 'Press', href: 'https://www.eljefe.com/pages/contact' },
+  ],
+  Support: [
+    { label: 'Store Locator', href: '#find-us' },
+    { label: 'Contact Us', href: 'https://www.eljefe.com/pages/contact' },
+    { label: 'FAQ', href: 'https://www.eljefe.com/pages/faq' },
+    { label: 'Shipping', href: 'https://www.eljefe.com/policies/shipping-policy' },
+  ],
+  Legal: [
+    { label: 'Privacy Policy', href: 'https://www.eljefe.com/policies/privacy-policy' },
+    { label: 'Terms of Use', href: 'https://www.eljefe.com/policies/terms-of-service' },
+    { label: 'Cookie Policy', href: 'https://www.eljefe.com/policies/privacy-policy' },
+  ],
 }
+
+const socials = [
+  { label: 'IG', href: 'https://www.instagram.com/eljefe_energy' },
+  { label: 'TK', href: 'https://www.tiktok.com/@eljefeenergy' },
+  { label: 'TW', href: 'https://twitter.com/eljefeenergy' },
+  { label: 'YT', href: 'https://www.youtube.com/@eljefeenergy' },
+]
 
 export default function Footer() {
   return (
     <footer className="relative pt-20 md:pt-36 pb-10 overflow-hidden" style={{ background: '#050507' }}>
       {/* Top border */}
-      <div className="w-full h-px mb-24" style={{ background: 'linear-gradient(90deg, transparent, rgba(232,0,29,0.4), rgba(212,175,55,0.2), transparent)' }} />
+      <div
+        className="w-full h-px mb-24"
+        style={{
+          background: 'linear-gradient(90deg, transparent, rgba(232,0,29,0.4), rgba(212,175,55,0.2), transparent)',
+        }}
+      />
 
       <div className="px-10 md:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-16 lg:gap-20 mb-24">
@@ -34,10 +65,12 @@ export default function Footer() {
               Fuel for the Fearless. Crafted for those who lead, dominate, and never ask permission.
             </p>
             <div className="flex gap-3 mt-3">
-              {['IG', 'TK', 'TW', 'YT'].map((s) => (
+              {socials.map((s) => (
                 <motion.a
-                  key={s}
-                  href="#"
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 flex items-center justify-center text-xs font-bold"
                   style={{
                     border: '1px solid rgba(255,255,255,0.1)',
@@ -45,7 +78,7 @@ export default function Footer() {
                   }}
                   whileHover={{ borderColor: '#E8001D', color: '#E8001D', scale: 1.08 }}
                 >
-                  {s}
+                  {s.label}
                 </motion.a>
               ))}
             </div>
@@ -64,15 +97,17 @@ export default function Footer() {
               <h4 className="text-xs font-black tracking-widest uppercase text-white">{section}</h4>
               <ul className="flex flex-col gap-3">
                 {items.map((item) => (
-                  <li key={item}>
+                  <li key={item.label}>
                     <a
-                      href="#"
+                      href={item.href}
+                      target={item.href.startsWith('http') ? '_blank' : undefined}
+                      rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                       className="text-sm transition-colors"
                       style={{ color: 'rgba(255,255,255,0.3)' }}
                       onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
                       onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.3)')}
                     >
-                      {item}
+                      {item.label}
                     </a>
                   </li>
                 ))}
@@ -87,7 +122,7 @@ export default function Footer() {
           style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
         >
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
-            © 2024 El Jefe Energy. All rights reserved. Fearless. Unapologetic. Refined.
+            © 2025 El Jefe Energy. All rights reserved. Fearless. Unapologetic. Refined.
           </p>
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.15)' }}>
             Must be 18+ to purchase. Drink responsibly.
