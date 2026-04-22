@@ -12,6 +12,7 @@ const merch = [
     price: '$28',
     tag: 'BESTSELLER',
     img: 'https://www.eljefe.com/cdn/shop/files/El_Jefe_Black_suede_hat_Silver_stock.jpg',
+    href: 'https://www.eljefe.com/products/el-jefe-trucker-hat',
   },
   {
     name: 'El Jefe Boxing Hoodie',
@@ -19,6 +20,7 @@ const merch = [
     price: '$48',
     tag: 'LIMITED',
     img: 'https://www.eljefe.com/cdn/shop/files/ElJefemalefrontboxinghoodie.jpg',
+    href: 'https://www.eljefe.com/products/el-jefe-boxing-hoodie',
   },
   {
     name: 'El Jefe Racing Hoodie',
@@ -26,6 +28,7 @@ const merch = [
     price: '$48',
     tag: 'NEW DROP',
     img: 'https://www.eljefe.com/cdn/shop/files/IMG_7949.jpg',
+    href: 'https://www.eljefe.com/products/el-jefe-racing-hoodie',
   },
   {
     name: 'El Jefe Energy Beanie',
@@ -33,6 +36,7 @@ const merch = [
     price: '$24',
     tag: 'ESSENTIAL',
     img: 'https://www.eljefe.com/cdn/shop/files/ElJefeBeaniemaroonredwithorangestitching.jpg',
+    href: 'https://www.eljefe.com/products/el-jefe-beanie',
   },
 ]
 
@@ -44,7 +48,10 @@ export default function Merch() {
       style={{ background: '#050507' }}
     >
       {/* Gold top border */}
-      <div className="w-full h-px mb-12 md:mb-24" style={{ background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.35), transparent)' }} />
+      <div
+        className="w-full h-px mb-12 md:mb-24"
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.35), transparent)' }}
+      />
 
       <div className="px-10 md:px-20">
         {/* Header */}
@@ -77,7 +84,9 @@ export default function Merch() {
           </motion.div>
 
           <motion.a
-            href="#"
+            href="https://www.eljefe.com/collections/merchandise"
+            target="_blank"
+            rel="noopener noreferrer"
             className="self-start md:self-auto px-8 py-4 text-xs font-bold tracking-widest uppercase border border-white/15 text-white hover:border-white/40 transition-colors"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -89,11 +98,14 @@ export default function Merch() {
           </motion.a>
         </div>
 
-        {/* 3D product card grid */}
+        {/* Product card grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-8">
           {merch.map((item, i) => (
-            <motion.div
+            <motion.a
               key={item.name}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
               initial={{ opacity: 0, y: 60 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
@@ -108,7 +120,7 @@ export default function Merch() {
                 tag={item.tag}
                 className="w-full"
               />
-            </motion.div>
+            </motion.a>
           ))}
         </div>
 
@@ -156,7 +168,9 @@ export default function Merch() {
                 />
               </div>
               <motion.a
-                href="#"
+                href="https://www.eljefe.com/products/the-boss-7-5-power-pack"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="mt-6 inline-block px-10 py-4 text-sm font-bold tracking-widest uppercase text-white"
                 style={{ background: '#E8001D' }}
                 whileHover={{ scale: 1.04, boxShadow: '0 0 30px rgba(232,0,29,0.4)' }}
