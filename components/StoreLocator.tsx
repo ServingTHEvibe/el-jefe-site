@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 
 const retailers = [
@@ -12,6 +13,20 @@ const retailers = [
 ]
 
 export default function StoreLocator() {
+  const [zip, setZip] = useState('')
+
+  const handleFind = () => {
+    if (zip.trim()) {
+      window.open(
+        `https://www.google.com/maps/search/El+Jefe+Energy+near+${encodeURIComponent(zip)}`,
+        '_blank',
+        'noopener,noreferrer',
+      )
+    } else {
+      window.open('https://www.eljefe.com/pages/store-locator', '_blank', 'noopener,noreferrer')
+    }
+  }
+
   return (
     <section
       id="find-us"
@@ -66,6 +81,9 @@ export default function StoreLocator() {
             <div className="flex gap-0 mt-2">
               <input
                 type="text"
+                value={zip}
+                onChange={(e) => setZip(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleFind()}
                 placeholder="Enter your zip code..."
                 className="flex-1 px-6 py-5 text-sm text-white outline-none"
                 style={{
@@ -75,6 +93,7 @@ export default function StoreLocator() {
                 }}
               />
               <motion.button
+                onClick={handleFind}
                 className="px-8 py-5 text-sm font-bold tracking-wider uppercase text-white shrink-0"
                 style={{ background: '#E8001D' }}
                 whileHover={{ scale: 1.03, backgroundColor: '#FF1A1A' }}
@@ -84,8 +103,25 @@ export default function StoreLocator() {
               </motion.button>
             </div>
 
+            {/* Order online link */}
+            <motion.a
+              href="https://www.eljefe.com/collections/energy-drinks"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="self-start text-xs font-bold tracking-widest uppercase border-b transition-colors"
+              style={{
+                fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
+                color: 'rgba(255,255,255,0.35)',
+                borderColor: 'rgba(255,255,255,0.1)',
+                letterSpacing: '0.14em',
+              }}
+              whileHover={{ color: '#E8001D', borderColor: '#E8001D' }}
+            >
+              Or order online →
+            </motion.a>
+
             {/* Retailer badges */}
-            <div className="mt-4">
+            <div className="mt-2">
               <p className="text-xs tracking-widest uppercase mb-5" style={{ color: 'rgba(255,255,255,0.25)' }}>
                 Available at
               </p>
@@ -111,7 +147,7 @@ export default function StoreLocator() {
             </div>
           </motion.div>
 
-          {/* Right — real map */}
+          {/* Right — map */}
           <motion.div
             className="relative"
             initial={{ opacity: 0, x: 40 }}
@@ -119,7 +155,6 @@ export default function StoreLocator() {
             viewport={{ once: true }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           >
-            {/* Red glow border frame */}
             <div
               className="relative w-full overflow-hidden"
               style={{
@@ -128,7 +163,6 @@ export default function StoreLocator() {
                 boxShadow: '0 0 60px rgba(232,0,29,0.08)',
               }}
             >
-              {/* Dark overlay on top of map to match brand tone */}
               <div
                 className="absolute inset-0 z-10 pointer-events-none"
                 style={{
@@ -149,7 +183,6 @@ export default function StoreLocator() {
                 loading="lazy"
               />
 
-              {/* Location count badge */}
               <div
                 className="absolute bottom-5 left-5 z-20 px-4 py-3"
                 style={{
