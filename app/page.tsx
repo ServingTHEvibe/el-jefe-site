@@ -1,3 +1,4 @@
+import PageLoader from '@/components/PageLoader'
 import PromoBanner from '@/components/PromoBanner'
 import Nav from '@/components/Nav'
 import Hero from '@/components/Hero'
@@ -14,6 +15,7 @@ import Footer from '@/components/Footer'
 export default function Home() {
   return (
     <main className="bg-black">
+      <PageLoader />
       <PromoBanner />
       <Nav />
       <ScrollingCan />
