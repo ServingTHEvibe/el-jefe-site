@@ -3,6 +3,7 @@ import PromoBanner from '@/components/PromoBanner'
 import Nav from '@/components/Nav'
 import Hero from '@/components/Hero'
 import ScrollingCan from '@/components/ScrollingCan'
+import CanShowcase from '@/components/CanShowcase'
 import Manifesto from '@/components/Manifesto'
 import About from '@/components/About'
 import SocialProof from '@/components/SocialProof'
@@ -20,6 +21,7 @@ export default function Home() {
       <Nav />
       <ScrollingCan />
       <Hero />
+      <CanShowcase />
       <Manifesto />
       <About />
       <SocialProof />
