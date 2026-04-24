@@ -88,6 +88,13 @@ const flavors = [
   },
 ]
 
+const STATS = [
+  { val: '2000 MG', label: 'Taurine' },
+  { val: '200 MG',  label: 'Panax Ginseng Extract' },
+  { val: '200 MG',  label: 'L-Carnitine L-Tartrate' },
+  { val: '150 MG',  label: 'Caffeine' },
+]
+
 export default function Flavors() {
   const desktopRef = useRef<HTMLDivElement>(null)
   const [winW, setWinW] = useState(1440)
@@ -112,7 +119,6 @@ export default function Flavors() {
   )
   const x = useSpring(rawX, { stiffness: 55, damping: 22, mass: 1.2 })
 
-  const headerOpacity = useTransform(scrollYProgress, [0, 0.07], [1, 0])
   const scrollHintOpacity = useTransform(scrollYProgress, [0, 0.04], [1, 0])
 
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
@@ -130,7 +136,6 @@ export default function Flavors() {
 
       {/* ── MOBILE: card grid ─────────────────────────────── */}
       <div className="block md:hidden py-24 px-8">
-        {/* Header */}
         <div className="mb-14 flex flex-col gap-5">
           <span className="text-xs font-bold tracking-widest uppercase" style={{ color: '#E8001D' }}>
             The Lineup
@@ -154,7 +159,6 @@ export default function Flavors() {
           </h2>
         </div>
 
-        {/* Grid */}
         <div className="grid grid-cols-2 gap-4" style={{ perspective: '1000px' }}>
           {flavors.map((flavor, i) => (
             <motion.div
@@ -198,7 +202,7 @@ export default function Flavors() {
       >
         <div className="sticky top-0 h-screen overflow-hidden">
 
-          {/* Ambient color — cross-fades per flavor */}
+          {/* Ambient color cross-fade per flavor */}
           <motion.div
             key={current.color}
             className="absolute inset-0 z-0 pointer-events-none"
@@ -207,43 +211,9 @@ export default function Flavors() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.9 }}
             style={{
-              background: `radial-gradient(ellipse 75% 65% at 65% 50%, rgba(${current.colorRgb},0.13) 0%, transparent 68%)`,
+              background: `radial-gradient(ellipse 65% 55% at 30% 55%, rgba(${current.colorRgb},0.12) 0%, transparent 65%)`,
             }}
           />
-
-          {/* Section header — fades as scroll begins */}
-          <motion.div
-            className="absolute top-14 left-16 z-30"
-            style={{ opacity: headerOpacity }}
-          >
-            <span
-              style={{
-                fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-                fontSize: '10px',
-                letterSpacing: '0.2em',
-                color: '#E8001D',
-                textTransform: 'uppercase',
-              }}
-            >
-              The Lineup
-            </span>
-            <h2
-              className="mt-4 font-black uppercase leading-none text-white"
-              style={{ fontSize: 'clamp(3rem, 7vw, 8rem)', letterSpacing: '-0.02em' }}
-            >
-              Pick Your<br />
-              <span
-                style={{
-                  background: 'linear-gradient(135deg, #E8001D, #D4AF37)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
-              >
-                Weapon
-              </span>
-            </h2>
-          </motion.div>
 
           {/* Horizontal track */}
           <motion.div
@@ -260,7 +230,7 @@ export default function Flavors() {
           </motion.div>
 
           {/* Progress dots */}
-          <div className="absolute bottom-9 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2.5">
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2.5">
             {flavors.map((f, i) => (
               <motion.div
                 key={f.name}
@@ -275,9 +245,9 @@ export default function Flavors() {
             ))}
           </div>
 
-          {/* Scroll hint — fades immediately */}
+          {/* Scroll hint */}
           <motion.div
-            className="absolute bottom-9 right-14 z-30 flex items-center gap-3"
+            className="absolute bottom-8 right-14 z-30 flex items-center gap-3"
             style={{ opacity: scrollHintOpacity }}
           >
             <motion.span
@@ -299,27 +269,6 @@ export default function Flavors() {
               Scroll to explore
             </span>
           </motion.div>
-
-          {/* CTA — visible on last flavor */}
-          <motion.a
-            href="https://www.eljefe.com/collections/energy-drinks"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="absolute bottom-9 left-16 z-30 flex items-center gap-3 px-7 py-3 text-white border border-white/10 hover:border-red-600 transition-colors"
-            style={{
-              fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-              fontSize: '9px',
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-            }}
-            animate={{
-              opacity: activeIdx === flavors.length - 1 ? 1 : 0,
-              y: activeIdx === flavors.length - 1 ? 0 : 8,
-            }}
-            transition={{ duration: 0.4 }}
-          >
-            Shop All Flavors →
-          </motion.a>
         </div>
       </div>
     </section>
@@ -331,12 +280,23 @@ type Flavor = typeof flavors[number]
 function FlavorSlide({ flavor, isActive }: { flavor: Flavor; isActive: boolean }) {
   return (
     <div
-      className="relative flex-shrink-0 flex items-center"
+      className="relative flex-shrink-0 flex flex-col"
       style={{ width: '100vw', height: '100vh', background: '#050507' }}
     >
-      {/* Left: info */}
-      <div className="relative z-10 flex flex-col gap-8 pl-16 pr-8 max-w-[48vw]">
-        {/* Counter */}
+      {/* ── TOP HEADER ──────────────────────────────────────── */}
+      <div
+        className="flex items-end justify-between flex-shrink-0"
+        style={{ padding: '56px 64px 24px' }}
+      >
+        <motion.h2
+          className="font-black uppercase text-white leading-none"
+          style={{ fontSize: 'clamp(2rem, 4.5vw, 6rem)', letterSpacing: '-0.03em' }}
+          animate={{ opacity: isActive ? 1 : 0.12, x: isActive ? 0 : -28 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        >
+          Fuel for the Fearless
+        </motion.h2>
+
         <motion.span
           style={{
             fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
@@ -344,100 +304,186 @@ function FlavorSlide({ flavor, isActive }: { flavor: Flavor; isActive: boolean }
             letterSpacing: '0.22em',
             color: flavor.color,
             textTransform: 'uppercase',
+            flexShrink: 0,
           }}
           animate={{ opacity: isActive ? 1 : 0.4 }}
           transition={{ duration: 0.5 }}
         >
           {flavor.num} / {String(flavors.length).padStart(2, '0')}
         </motion.span>
-
-        {/* Name — massive */}
-        <motion.h2
-          className="font-black uppercase leading-none text-white"
-          style={{
-            fontSize: 'clamp(4rem, 8.5vw, 10rem)',
-            letterSpacing: '-0.03em',
-          }}
-          animate={{ opacity: isActive ? 1 : 0.3, x: isActive ? 0 : -20 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        >
-          {flavor.name.split(' ').map((word, i) => (
-            <span key={i} className="block">{word}</span>
-          ))}
-        </motion.h2>
-
-        {/* Desc */}
-        <motion.p
-          style={{
-            fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
-            fontSize: '16px',
-            fontWeight: 300,
-            color: 'rgba(255,255,255,0.45)',
-            lineHeight: 1.75,
-            maxWidth: '340px',
-          }}
-          animate={{ opacity: isActive ? 1 : 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          {flavor.desc}
-        </motion.p>
-
-        {/* CTA */}
-        <motion.a
-          href={flavor.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="self-start px-9 py-4 text-sm font-bold tracking-widest uppercase text-white"
-          style={{ background: flavor.color }}
-          animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 10 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-          whileHover={{ scale: 1.04, boxShadow: `0 0 32px rgba(${flavor.colorRgb},0.4)` }}
-          whileTap={{ scale: 0.97 }}
-        >
-          Shop Now →
-        </motion.a>
       </div>
 
-      {/* Right: can image */}
-      <div className="absolute right-0 top-0 bottom-0 flex items-center justify-center" style={{ width: '55%' }}>
-        {/* Glow behind can */}
+      {/* ── BODY: left image | right stats ──────────────────── */}
+      <div className="flex flex-1 overflow-hidden" style={{ paddingBottom: '56px' }}>
+
+        {/* LEFT — can product shot */}
         <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: `radial-gradient(ellipse 60% 70% at 50% 50%, rgba(${flavor.colorRgb},0.18) 0%, transparent 65%)`,
-          }}
-        />
-
-        <motion.div
-          className="relative"
-          style={{ width: '52%', aspectRatio: '1 / 1.35' }}
-          animate={{
-            opacity: isActive ? 1 : 0.2,
-            scale: isActive ? 1 : 0.92,
-          }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="relative flex items-center justify-center"
+          style={{ width: '52%', paddingLeft: '48px', paddingRight: '24px' }}
         >
-          <Image
-            src={flavor.img}
-            alt={flavor.name}
-            fill
-            className="object-contain"
-            sizes="35vw"
-            priority={flavor.num === '01'}
+          {/* glow behind image */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `radial-gradient(ellipse 75% 60% at 50% 50%, rgba(${flavor.colorRgb},0.16) 0%, transparent 68%)`,
+            }}
           />
-        </motion.div>
+
+          <motion.div
+            className="relative w-full"
+            style={{ maxWidth: '520px', aspectRatio: '1.45 / 1' }}
+            animate={{ opacity: isActive ? 1 : 0.18, scale: isActive ? 1 : 0.92 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Image
+              src={flavor.img}
+              alt={flavor.name}
+              fill
+              className="object-contain"
+              sizes="45vw"
+              priority={flavor.num === '01'}
+            />
+          </motion.div>
+        </div>
+
+        {/* RIGHT — stats panel */}
+        <div
+          className="flex flex-col justify-center"
+          style={{ width: '48%', paddingRight: '64px', paddingLeft: '16px' }}
+        >
+          {/* Flavor name */}
+          <motion.div
+            className="font-black uppercase leading-none"
+            style={{
+              fontSize: 'clamp(1.6rem, 3vw, 3.6rem)',
+              letterSpacing: '-0.02em',
+              color: flavor.color,
+              marginBottom: '20px',
+            }}
+            animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 16 }}
+            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {flavor.name}
+          </motion.div>
+
+          {/* ZERO SUGAR */}
+          <motion.div
+            className="font-black uppercase"
+            style={{
+              fontSize: 'clamp(1.1rem, 2vw, 2rem)',
+              letterSpacing: '0.06em',
+              color: '#ffffff',
+              marginBottom: '16px',
+            }}
+            animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 12 }}
+            transition={{ duration: 0.5, delay: 0.06 }}
+          >
+            Zero Sugar
+          </motion.div>
+
+          {/* Stat rows with dividers */}
+          {STATS.map((stat, i) => (
+            <div key={stat.label}>
+              <motion.div
+                style={{
+                  height: '1px',
+                  background: `rgba(${flavor.colorRgb}, 0.22)`,
+                  marginBottom: '14px',
+                }}
+                animate={{ scaleX: isActive ? 1 : 0, opacity: isActive ? 1 : 0 }}
+                transition={{ duration: 0.5, delay: 0.08 + i * 0.07 }}
+                style={{
+                  height: '1px',
+                  background: `rgba(${flavor.colorRgb}, 0.22)`,
+                  marginBottom: '14px',
+                  transformOrigin: 'left',
+                }}
+              />
+              <motion.div
+                className="flex flex-col"
+                style={{ marginBottom: '14px' }}
+                animate={{ opacity: isActive ? 1 : 0, x: isActive ? 0 : 18 }}
+                transition={{ duration: 0.5, delay: 0.1 + i * 0.07 }}
+              >
+                <span
+                  className="font-black"
+                  style={{
+                    fontSize: 'clamp(1.6rem, 3vw, 3rem)',
+                    color: flavor.color,
+                    lineHeight: 1,
+                    letterSpacing: '-0.01em',
+                  }}
+                >
+                  {stat.val}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
+                    fontSize: '8px',
+                    letterSpacing: '0.18em',
+                    color: 'rgba(255,255,255,0.42)',
+                    textTransform: 'uppercase',
+                    marginTop: '3px',
+                  }}
+                >
+                  {stat.label}
+                </span>
+              </motion.div>
+            </div>
+          ))}
+
+          {/* Final divider */}
+          <div
+            style={{
+              height: '1px',
+              background: `rgba(${flavor.colorRgb}, 0.22)`,
+              marginBottom: '20px',
+            }}
+          />
+
+          {/* Logo + CTA */}
+          <motion.div
+            className="flex items-center justify-between"
+            animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 10 }}
+            transition={{ duration: 0.5, delay: 0.38 }}
+          >
+            <Image
+              src="https://www.eljefe.com/cdn/shop/files/El_Jefe_Energy_logo-white_transparent.png"
+              alt="El Jefe Energy"
+              width={90}
+              height={32}
+              style={{ objectFit: 'contain', objectPosition: 'left' }}
+            />
+            <motion.a
+              href={flavor.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center px-7 py-3 font-bold tracking-widest uppercase text-black"
+              style={{
+                fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
+                fontSize: '9px',
+                letterSpacing: '0.14em',
+                background: flavor.color,
+              }}
+              whileHover={{ scale: 1.04, boxShadow: `0 0 30px rgba(${flavor.colorRgb},0.5)` }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Shop Now →
+            </motion.a>
+          </motion.div>
+        </div>
       </div>
 
-      {/* Flavor short name — giant ghost text */}
+      {/* Ghost watermark */}
       <div
-        className="absolute right-8 bottom-12 select-none pointer-events-none"
+        className="absolute bottom-4 right-6 select-none pointer-events-none"
         style={{
           fontFamily: "var(--font-syne, 'Syne', sans-serif)",
-          fontSize: 'clamp(5rem, 12vw, 14rem)',
+          fontSize: 'clamp(4rem, 11vw, 13rem)',
           fontWeight: 900,
           letterSpacing: '-0.04em',
           color: 'transparent',
-          WebkitTextStroke: `1px rgba(${flavor.colorRgb},0.1)`,
+          WebkitTextStroke: `1px rgba(${flavor.colorRgb},0.07)`,
           lineHeight: 1,
           whiteSpace: 'nowrap',
         }}
