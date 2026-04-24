@@ -118,14 +118,10 @@ export default function Flavors() {
     [0, -(flavors.length - 1) * winW],
   )
   const x = useSpring(rawX, { stiffness: 55, damping: 22, mass: 1.2 })
-
   const scrollHintOpacity = useTransform(scrollYProgress, [0, 0.04], [1, 0])
 
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
-    const idx = Math.min(
-      Math.max(Math.round(v * (flavors.length - 1)), 0),
-      flavors.length - 1,
-    )
+    const idx = Math.min(Math.max(Math.round(v * (flavors.length - 1)), 0), flavors.length - 1)
     setActiveIdx(idx)
   })
 
@@ -134,7 +130,7 @@ export default function Flavors() {
   return (
     <section id="flavors" className="relative" style={{ background: '#050507' }}>
 
-      {/* ── MOBILE: card grid ─────────────────────────────── */}
+      {/* MOBILE: card grid */}
       <div className="block md:hidden py-24 px-8">
         <div className="mb-14 flex flex-col gap-5">
           <span className="text-xs font-bold tracking-widest uppercase" style={{ color: '#E8001D' }}>
@@ -194,7 +190,7 @@ export default function Flavors() {
         </motion.a>
       </div>
 
-      {/* ── DESKTOP: horizontal scroll ────────────────────── */}
+      {/* DESKTOP: horizontal scroll */}
       <div
         ref={desktopRef}
         className="hidden md:block relative"
@@ -202,22 +198,21 @@ export default function Flavors() {
       >
         <div className="sticky top-0 h-screen overflow-hidden">
 
-          {/* Ambient color cross-fade per flavor */}
+          {/* Ambient glow — cross-fades per flavor */}
           <motion.div
             key={current.color}
             className="absolute inset-0 z-0 pointer-events-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
             transition={{ duration: 0.9 }}
             style={{
               background: `radial-gradient(ellipse 65% 55% at 30% 55%, rgba(${current.colorRgb},0.12) 0%, transparent 65%)`,
             }}
           />
 
-          {/* Horizontal track */}
+          {/* Horizontal slide track */}
           <motion.div
-            className="flex h-full"
+            className="flex h-full relative z-10"
             style={{ x, width: `${flavors.length * 100}vw` }}
           >
             {flavors.map((flavor, i) => (
@@ -278,12 +273,18 @@ export default function Flavors() {
 type Flavor = typeof flavors[number]
 
 function FlavorSlide({ flavor, isActive }: { flavor: Flavor; isActive: boolean }) {
+  const dividerStyle = {
+    height: '1px',
+    background: `rgba(${flavor.colorRgb}, 0.22)`,
+    marginBottom: '14px',
+  } as const
+
   return (
     <div
       className="relative flex-shrink-0 flex flex-col"
       style={{ width: '100vw', height: '100vh', background: '#050507' }}
     >
-      {/* ── TOP HEADER ──────────────────────────────────────── */}
+      {/* TOP HEADER */}
       <div
         className="flex items-end justify-between flex-shrink-0"
         style={{ padding: '56px 64px 24px' }}
@@ -291,7 +292,7 @@ function FlavorSlide({ flavor, isActive }: { flavor: Flavor; isActive: boolean }
         <motion.h2
           className="font-black uppercase text-white leading-none"
           style={{ fontSize: 'clamp(2rem, 4.5vw, 6rem)', letterSpacing: '-0.03em' }}
-          animate={{ opacity: isActive ? 1 : 0.12, x: isActive ? 0 : -28 }}
+          animate={{ opacity: isActive ? 1 : 0.1, x: isActive ? 0 : -28 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
           Fuel for the Fearless
@@ -313,7 +314,7 @@ function FlavorSlide({ flavor, isActive }: { flavor: Flavor; isActive: boolean }
         </motion.span>
       </div>
 
-      {/* ── BODY: left image | right stats ──────────────────── */}
+      {/* BODY */}
       <div className="flex flex-1 overflow-hidden" style={{ paddingBottom: '56px' }}>
 
         {/* LEFT — can product shot */}
@@ -321,14 +322,12 @@ function FlavorSlide({ flavor, isActive }: { flavor: Flavor; isActive: boolean }
           className="relative flex items-center justify-center"
           style={{ width: '52%', paddingLeft: '48px', paddingRight: '24px' }}
         >
-          {/* glow behind image */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: `radial-gradient(ellipse 75% 60% at 50% 50%, rgba(${flavor.colorRgb},0.16) 0%, transparent 68%)`,
+              background: `radial-gradient(ellipse 75% 60% at 50% 50%, rgba(${flavor.colorRgb},0.15) 0%, transparent 68%)`,
             }}
           />
-
           <motion.div
             className="relative w-full"
             style={{ maxWidth: '520px', aspectRatio: '1.45 / 1' }}
@@ -366,7 +365,7 @@ function FlavorSlide({ flavor, isActive }: { flavor: Flavor; isActive: boolean }
             {flavor.name}
           </motion.div>
 
-          {/* ZERO SUGAR */}
+          {/* Zero Sugar */}
           <motion.div
             className="font-black uppercase"
             style={{
@@ -381,24 +380,10 @@ function FlavorSlide({ flavor, isActive }: { flavor: Flavor; isActive: boolean }
             Zero Sugar
           </motion.div>
 
-          {/* Stat rows with dividers */}
+          {/* Stat rows */}
           {STATS.map((stat, i) => (
             <div key={stat.label}>
-              <motion.div
-                style={{
-                  height: '1px',
-                  background: `rgba(${flavor.colorRgb}, 0.22)`,
-                  marginBottom: '14px',
-                }}
-                animate={{ scaleX: isActive ? 1 : 0, opacity: isActive ? 1 : 0 }}
-                transition={{ duration: 0.5, delay: 0.08 + i * 0.07 }}
-                style={{
-                  height: '1px',
-                  background: `rgba(${flavor.colorRgb}, 0.22)`,
-                  marginBottom: '14px',
-                  transformOrigin: 'left',
-                }}
-              />
+              <div style={dividerStyle} />
               <motion.div
                 className="flex flex-col"
                 style={{ marginBottom: '14px' }}
@@ -433,17 +418,12 @@ function FlavorSlide({ flavor, isActive }: { flavor: Flavor; isActive: boolean }
           ))}
 
           {/* Final divider */}
-          <div
-            style={{
-              height: '1px',
-              background: `rgba(${flavor.colorRgb}, 0.22)`,
-              marginBottom: '20px',
-            }}
-          />
+          <div style={dividerStyle} />
 
           {/* Logo + CTA */}
           <motion.div
             className="flex items-center justify-between"
+            style={{ marginTop: '4px' }}
             animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 10 }}
             transition={{ duration: 0.5, delay: 0.38 }}
           >
