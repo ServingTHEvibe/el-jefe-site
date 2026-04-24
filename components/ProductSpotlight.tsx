@@ -12,7 +12,7 @@ const featured = [
     color: '#E8001D',
     colorRgb: '232,0,29',
     img: 'https://www.eljefe.com/cdn/shop/files/EJEtwoshot_DiabloPunch.jpg',
-    href: 'https://www.eljefe.com/products/diablo-punch',
+    href: 'https://www.eljefe.com/collections/energy-drinks',
     stats: [{ label: 'Caffeine', val: '200mg' }, { label: 'B-Vitamins', val: '6 types' }, { label: 'Calories', val: '10' }],
   },
   {
@@ -22,7 +22,7 @@ const featured = [
     color: '#D4AF37',
     colorRgb: '212,175,55',
     img: 'https://www.eljefe.com/cdn/shop/files/EJE_two_shot_phantom_lemonade.jpg',
-    href: 'https://www.eljefe.com/products/phantom-lemonade',
+    href: 'https://www.eljefe.com/collections/energy-drinks',
     stats: [{ label: 'Caffeine', val: '160mg' }, { label: 'Electrolytes', val: '5 types' }, { label: 'Sugar', val: '0g' }],
   },
   {
@@ -32,7 +32,7 @@ const featured = [
     color: '#A0522D',
     colorRgb: '160,82,45',
     img: 'https://www.eljefe.com/cdn/shop/files/EJE_two_shot_2048_Mailo_Tamarindo.jpg',
-    href: 'https://www.eljefe.com/products/mailo-tamarindo',
+    href: 'https://www.eljefe.com/collections/energy-drinks',
     stats: [{ label: 'Caffeine', val: '180mg' }, { label: 'Taurine', val: '1000mg' }, { label: 'Calories', val: '15' }],
   },
 ]
