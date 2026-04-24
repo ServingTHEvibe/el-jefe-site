@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion'
 
@@ -17,20 +17,18 @@ export default function Nav() {
 
   return (
     <>
-      {/* MDX-spec nav: always border-bottom, blur+deep bg on scroll */}
       <motion.nav
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between"
+        className="fixed top-0 left-0 right-0 z-[55] flex items-center justify-between"
         style={{ padding: '20px 48px', borderBottom: '1px solid rgba(255,255,255,0.07)' }}
         animate={{
-          backgroundColor: scrolled ? 'rgba(5,5,7,0.88)' : 'rgba(5,5,7,0)',
-          backdropFilter: scrolled ? 'blur(20px)' : 'blur(0px)',
+          backgroundColor: scrolled ? 'rgba(5,5,7,0.96)' : 'rgba(5,5,7,0.88)',
+          backdropFilter: 'blur(20px)',
         }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
       >
-        {/* Logo */}
         <motion.a
           href="/"
-          className="relative select-none"
+          className="relative select-none flex-shrink-0"
           style={{ width: 110, height: 40 }}
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -46,7 +44,6 @@ export default function Nav() {
           />
         </motion.a>
 
-        {/* Desktop Links — JetBrains Mono */}
         <motion.ul
           className="hidden md:flex items-center gap-8"
           initial={{ opacity: 0, y: -10 }}
@@ -72,7 +69,6 @@ export default function Nav() {
           ))}
         </motion.ul>
 
-        {/* CTA — primary white button */}
         <motion.a
           href="#flavors"
           className="hidden md:inline-flex items-center"
@@ -89,7 +85,6 @@ export default function Nav() {
           Shop Now
         </motion.a>
 
-        {/* Mobile menu button */}
         <button
           className="md:hidden flex flex-col gap-1.5 p-2"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -103,7 +98,6 @@ export default function Nav() {
         </button>
       </motion.nav>
 
-      {/* Mobile menu */}
       <motion.div
         className="fixed inset-0 z-40 flex flex-col items-center justify-center md:hidden"
         style={{ background: 'rgba(5,5,7,0.97)' }}
