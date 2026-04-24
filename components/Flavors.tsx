@@ -14,7 +14,7 @@ const flavors = [
     colorRgb: '160,82,45',
     desc: 'Bold, tangy, unforgettable. The flavor that built the movement.',
     img: 'https://www.eljefe.com/cdn/shop/files/EJE_two_shot_2048_Mailo_Tamarindo.jpg',
-    href: 'https://www.eljefe.com/products/mailo-tamarindo',
+    href: 'https://www.eljefe.com/collections/energy-drinks',
   },
   {
     name: 'Killer Peach',
@@ -24,7 +24,7 @@ const flavors = [
     colorRgb: '255,107,53',
     desc: 'Sweet heat. Assassin in fruit form.',
     img: 'https://www.eljefe.com/cdn/shop/files/EJEtwoshot_KillerPeach.jpg',
-    href: 'https://www.eljefe.com/products/killer-peach',
+    href: 'https://www.eljefe.com/collections/energy-drinks',
   },
   {
     name: 'Phantom Lemon',
@@ -34,7 +34,7 @@ const flavors = [
     colorRgb: '212,175,55',
     desc: 'Gold standard refreshment. Clean fuel only.',
     img: 'https://www.eljefe.com/cdn/shop/files/EJE_two_shot_phantom_lemonade.jpg',
-    href: 'https://www.eljefe.com/products/phantom-lemonade',
+    href: 'https://www.eljefe.com/collections/energy-drinks',
   },
   {
     name: 'Sinister Razz',
@@ -44,7 +44,7 @@ const flavors = [
     colorRgb: '199,21,133',
     desc: 'Dark berry. Dangerous edge. No apologies.',
     img: 'https://www.eljefe.com/cdn/shop/files/EJEtwoshot_SinisterRazz.jpg',
-    href: 'https://www.eljefe.com/products/sinister-razz',
+    href: 'https://www.eljefe.com/collections/energy-drinks',
   },
   {
     name: 'Diablo Punch',
@@ -54,7 +54,7 @@ const flavors = [
     colorRgb: '232,0,29',
     desc: 'Pure aggression. Zero mercy. Maximum impact.',
     img: 'https://www.eljefe.com/cdn/shop/files/EJEtwoshot_DiabloPunch.jpg',
-    href: 'https://www.eljefe.com/products/diablo-punch',
+    href: 'https://www.eljefe.com/collections/energy-drinks',
   },
   {
     name: 'Zuma Watermelon',
@@ -64,7 +64,7 @@ const flavors = [
     colorRgb: '34,197,94',
     desc: 'Summer dominance. Refreshed and relentless.',
     img: 'https://www.eljefe.com/cdn/shop/files/EJE_two_shot_zuma_watermelon.jpg',
-    href: 'https://www.eljefe.com/products/zuma-watermelon',
+    href: 'https://www.eljefe.com/collections/energy-drinks',
   },
   {
     name: 'Baja Orange',
@@ -74,7 +74,7 @@ const flavors = [
     colorRgb: '255,107,0',
     desc: 'West coast. Sun-fueled supremacy. Born fearless.',
     img: 'https://www.eljefe.com/cdn/shop/files/EJE_two_shot_2048px_baja_orange.jpg',
-    href: 'https://www.eljefe.com/products/baja-orange',
+    href: 'https://www.eljefe.com/collections/energy-drinks',
   },
   {
     name: 'Wild Mango',
@@ -84,7 +84,7 @@ const flavors = [
     colorRgb: '245,158,11',
     desc: 'Tropical power. Exotic domination. Untamed.',
     img: 'https://www.eljefe.com/cdn/shop/files/EJEtwoshot_WildMango.jpg',
-    href: 'https://www.eljefe.com/products/wild-mango',
+    href: 'https://www.eljefe.com/collections/energy-drinks',
   },
 ]
 
