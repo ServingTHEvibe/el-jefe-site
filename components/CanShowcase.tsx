@@ -391,7 +391,7 @@ export default function CanShowcase() {
             Tropical power. Exotic domination.<br />16 fl oz of pure untamed energy.
           </p>
           <motion.a
-            href="https://www.eljefe.com/products/wild-mango"
+            href="https://www.eljefe.com/collections/energy-drinks"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex mt-7 px-10 py-4 font-bold tracking-widest uppercase text-black"
