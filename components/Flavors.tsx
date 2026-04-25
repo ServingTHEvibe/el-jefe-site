@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
-import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring, useMotionValueEvent, AnimatePresence } from 'framer-motion'
 import { InteractiveTravelCard } from '@/components/ui/3d-card'
 
 const flavors = [
@@ -12,7 +12,7 @@ const flavors = [
     num: '01',
     color: '#A0522D',
     colorRgb: '160,82,45',
-    desc: 'Bold, tangy, unforgettable. The flavor that built the movement.',
+    desc: 'Bold, tangy, unforgettable.',
     img: 'https://www.eljefe.com/cdn/shop/files/EJE_two_shot_2048_Mailo_Tamarindo.jpg',
     href: 'https://www.eljefe.com/collections/energy-drinks',
   },
@@ -32,7 +32,7 @@ const flavors = [
     num: '03',
     color: '#D4AF37',
     colorRgb: '212,175,55',
-    desc: 'Gold standard refreshment. Clean fuel only.',
+    desc: 'Gold standard. Clean fuel only.',
     img: 'https://www.eljefe.com/cdn/shop/files/EJE_two_shot_phantom_lemonade.jpg',
     href: 'https://www.eljefe.com/collections/energy-drinks',
   },
@@ -42,7 +42,7 @@ const flavors = [
     num: '04',
     color: '#C71585',
     colorRgb: '199,21,133',
-    desc: 'Dark berry. Dangerous edge. No apologies.',
+    desc: 'Dark berry. Dangerous edge.',
     img: 'https://www.eljefe.com/cdn/shop/files/EJEtwoshot_SinisterRazz.jpg',
     href: 'https://www.eljefe.com/collections/energy-drinks',
   },
@@ -52,7 +52,7 @@ const flavors = [
     num: '05',
     color: '#E8001D',
     colorRgb: '232,0,29',
-    desc: 'Pure aggression. Zero mercy. Maximum impact.',
+    desc: 'Pure aggression. Zero mercy.',
     img: 'https://www.eljefe.com/cdn/shop/files/EJEtwoshot_DiabloPunch.jpg',
     href: 'https://www.eljefe.com/collections/energy-drinks',
   },
@@ -62,7 +62,7 @@ const flavors = [
     num: '06',
     color: '#22C55E',
     colorRgb: '34,197,94',
-    desc: 'Summer dominance. Refreshed and relentless.',
+    desc: 'Summer dominance. Relentless.',
     img: 'https://www.eljefe.com/cdn/shop/files/EJE_two_shot_zuma_watermelon.jpg',
     href: 'https://www.eljefe.com/collections/energy-drinks',
   },
@@ -72,7 +72,7 @@ const flavors = [
     num: '07',
     color: '#FF6B00',
     colorRgb: '255,107,0',
-    desc: 'West coast. Sun-fueled supremacy. Born fearless.',
+    desc: 'West coast. Sun-fueled supremacy.',
     img: 'https://www.eljefe.com/cdn/shop/files/EJE_two_shot_2048px_baja_orange.jpg',
     href: 'https://www.eljefe.com/collections/energy-drinks',
   },
@@ -82,73 +82,53 @@ const flavors = [
     num: '08',
     color: '#F59E0B',
     colorRgb: '245,158,11',
-    desc: 'Tropical power. Exotic domination. Untamed.',
+    desc: 'Tropical power. Untamed.',
     img: 'https://www.eljefe.com/cdn/shop/files/EJEtwoshot_WildMango.jpg',
     href: 'https://www.eljefe.com/collections/energy-drinks',
   },
 ]
 
-const STATS = [
-  { val: '2000 MG', label: 'Taurine' },
-  { val: '200 MG',  label: 'Panax Ginseng Extract' },
-  { val: '200 MG',  label: 'L-Carnitine L-Tartrate' },
-  { val: '150 MG',  label: 'Caffeine' },
-]
+const STATS = ['Zero Sugar', '150mg Caffeine', '2000mg Taurine', '200mg Ginseng']
 
-// Intro phase gets its own 90vh before slides begin
 const INTRO_VH = 90
 const SLIDE_VH = 90
 const TOTAL_VH = INTRO_VH + flavors.length * SLIDE_VH
 
+// Scale / opacity / y-drop per distance from active can
+const SCALE_MAP  = [1, 0.74, 0.54, 0.38, 0.28]
+const OPACITY_MAP = [1, 0.60, 0.32, 0.14, 0.05]
+const Y_MAP       = [0, 30, 55, 72, 80]
+const SLOT = 300 // px between can centers
+
 export default function Flavors() {
   const desktopRef = useRef<HTMLDivElement>(null)
-  const [winW, setWinW] = useState(1440)
   const [activeIdx, setActiveIdx] = useState(0)
-
-  useEffect(() => {
-    const update = () => setWinW(window.innerWidth)
-    update()
-    window.addEventListener('resize', update)
-    return () => window.removeEventListener('resize', update)
-  }, [])
 
   const { scrollYProgress } = useScroll({
     target: desktopRef,
     offset: ['start start', 'end end'],
   })
 
-  // introEnd = the fraction of total scroll where slides begin
   const introEnd = INTRO_VH / TOTAL_VH
 
-  // Slides only translate after the intro phase is done
-  const rawX = useTransform(
-    scrollYProgress,
-    [0, introEnd, 1],
-    [0, 0, -(flavors.length - 1) * winW],
-  )
-  const x = useSpring(rawX, { stiffness: 55, damping: 22, mass: 1.2 })
-
-  // "Pick Your Weapon" header: visible during intro, fades as slides start
+  // Header fades out as intro ends
   const headerOpacity = useTransform(
     scrollYProgress,
-    [0, introEnd * 0.55, introEnd * 0.9],
+    [0, introEnd * 0.5, introEnd * 0.9],
     [1, 1, 0],
   )
+  // Carousel fades in as intro ends
+  const carouselOpacity = useTransform(
+    scrollYProgress,
+    [introEnd * 0.6, introEnd],
+    [0, 1],
+  )
+  const scrollHintOpacity = useTransform(scrollYProgress, [0, introEnd * 0.25], [1, 0])
 
-  // Scroll hint fades immediately
-  const scrollHintOpacity = useTransform(scrollYProgress, [0, introEnd * 0.3], [1, 0])
-
-  // Track which flavor slide is active (only valid after intro ends)
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
-    if (v <= introEnd) {
-      setActiveIdx(0)
-      return
-    }
-    const slideProgress = (v - introEnd) / (1 - introEnd)
-    const idx = Math.min(
-      Math.max(Math.round(slideProgress * (flavors.length - 1)), 0),
-      flavors.length - 1,
-    )
+    if (v <= introEnd) { setActiveIdx(0); return }
+    const p = (v - introEnd) / (1 - introEnd)
+    const idx = Math.min(Math.max(Math.round(p * (flavors.length - 1)), 0), flavors.length - 1)
     setActiveIdx(idx)
   })
 
@@ -157,7 +137,7 @@ export default function Flavors() {
   return (
     <section id="flavors" className="relative" style={{ background: '#050507' }}>
 
-      {/* ── MOBILE ───────────────────────────────────────────── */}
+      {/* ── MOBILE ───────────────────────────────────────── */}
       <div className="block md:hidden py-24 px-8">
         <div className="mb-14 flex flex-col gap-5">
           <span className="text-xs font-bold tracking-widest uppercase" style={{ color: '#E8001D' }}>
@@ -181,7 +161,6 @@ export default function Flavors() {
             </span>
           </h2>
         </div>
-
         <div className="grid grid-cols-2 gap-4" style={{ perspective: '1000px' }}>
           {flavors.map((flavor, i) => (
             <motion.div
@@ -204,7 +183,6 @@ export default function Flavors() {
             </motion.div>
           ))}
         </div>
-
         <motion.a
           href="https://www.eljefe.com/collections/energy-drinks"
           target="_blank"
@@ -217,54 +195,55 @@ export default function Flavors() {
         </motion.a>
       </div>
 
-      {/* ── DESKTOP ──────────────────────────────────────────── */}
+      {/* ── DESKTOP ──────────────────────────────────────── */}
       <div
         ref={desktopRef}
-        className="hidden md:block relative"
+        className="hidden md:block"
         style={{ height: `${TOTAL_VH}vh` }}
       >
-        <div className="sticky top-0 h-screen overflow-hidden">
+        <div className="sticky top-0 h-screen overflow-hidden" style={{ background: '#050507' }}>
 
-          {/* Ambient glow — cross-fades per active flavor */}
+          {/* Ambient color glow — shifts per flavor */}
           <motion.div
             key={current.color}
-            className="absolute inset-0 z-0 pointer-events-none"
+            className="absolute inset-0 pointer-events-none z-0"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.9 }}
+            transition={{ duration: 1 }}
             style={{
-              background: `radial-gradient(ellipse 65% 55% at 30% 55%, rgba(${current.colorRgb},0.11) 0%, transparent 65%)`,
+              background: `radial-gradient(ellipse 60% 50% at 50% 38%, rgba(${current.colorRgb},0.18) 0%, transparent 65%)`,
             }}
           />
 
-          {/* ── PICK YOUR WEAPON — intro overlay ──────────────── */}
+          {/* ── PICK YOUR WEAPON intro ─────────────────── */}
           <motion.div
             className="absolute inset-0 z-20 flex flex-col justify-center pointer-events-none"
-            style={{ opacity: headerOpacity, padding: '0 64px' }}
+            style={{ opacity: headerOpacity, padding: '0 72px' }}
           >
             <motion.span
-              className="block font-bold tracking-widest uppercase mb-5"
               style={{
                 fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
                 fontSize: '10px',
                 letterSpacing: '0.22em',
                 color: '#E8001D',
+                textTransform: 'uppercase',
+                display: 'block',
+                marginBottom: '20px',
               }}
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.1 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
             >
               The Lineup
             </motion.span>
-
             <motion.h2
               className="font-black uppercase leading-none"
-              style={{ fontSize: 'clamp(4rem, 9vw, 11rem)', letterSpacing: '-0.03em' }}
-              initial={{ opacity: 0, y: 30 }}
+              style={{ fontSize: 'clamp(4.5rem, 9vw, 12rem)', letterSpacing: '-0.03em' }}
+              initial={{ opacity: 0, y: 36 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             >
               <span className="text-white block">Pick Your</span>
               <span
@@ -279,36 +258,32 @@ export default function Flavors() {
                 Weapon
               </span>
             </motion.h2>
-
             <motion.p
-              className="mt-8 max-w-sm"
               style={{
                 fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
                 fontSize: '15px',
                 fontWeight: 300,
-                color: 'rgba(255,255,255,0.35)',
-                lineHeight: 1.75,
+                color: 'rgba(255,255,255,0.32)',
+                lineHeight: 1.8,
+                marginTop: '28px',
               }}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.4 }}
             >
-              8 flavors. Zero sugar. 150mg caffeine.<br />
-              Each one built to hit different.
+              8 flavors. Zero sugar. Born fearless.
             </motion.p>
-
-            {/* Scroll hint */}
             <motion.div
-              className="flex items-center gap-3 mt-14"
+              className="flex items-center gap-3 mt-12"
               style={{ opacity: scrollHintOpacity }}
             >
               <motion.span
-                style={{ color: 'rgba(255,255,255,0.28)', fontSize: '18px' }}
-                animate={{ x: [0, 10, 0] }}
-                transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                style={{ color: 'rgba(255,255,255,0.3)', fontSize: '18px' }}
+                animate={{ y: [0, 5, 0] }}
+                transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
               >
-                →
+                ↓
               </motion.span>
               <span
                 style={{
@@ -324,236 +299,170 @@ export default function Flavors() {
             </motion.div>
           </motion.div>
 
-          {/* ── HORIZONTAL SLIDE TRACK ────────────────────────── */}
+          {/* ── CAROUSEL ──────────────────────────────── */}
           <motion.div
-            className="flex h-full relative z-10"
-            style={{ x, width: `${flavors.length * 100}vw` }}
+            className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-0"
+            style={{ opacity: carouselOpacity }}
           >
-            {flavors.map((flavor, i) => (
-              <FlavorSlide
-                key={flavor.name}
-                flavor={flavor}
-                isActive={i === activeIdx}
-              />
-            ))}
+            {/* Counter */}
+            <div
+              className="absolute top-14 right-16 z-30"
+              style={{
+                fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
+                fontSize: '10px',
+                letterSpacing: '0.22em',
+                color: current.color,
+                textTransform: 'uppercase',
+              }}
+            >
+              {current.num} / {String(flavors.length).padStart(2, '0')}
+            </div>
+
+            {/* Cans row */}
+            <div
+              className="relative flex items-end justify-center w-full overflow-hidden"
+              style={{ height: '52vh', flexShrink: 0 }}
+            >
+              {flavors.map((flavor, i) => {
+                const offset = i - activeIdx
+                const dist = Math.abs(offset)
+                const sc = SCALE_MAP[Math.min(dist, SCALE_MAP.length - 1)]
+                const op = OPACITY_MAP[Math.min(dist, OPACITY_MAP.length - 1)]
+                const yDrop = Y_MAP[Math.min(dist, Y_MAP.length - 1)]
+                const isActive = dist === 0
+
+                return (
+                  <motion.div
+                    key={flavor.name}
+                    className="absolute"
+                    style={{ width: `${SLOT}px`, height: '90%', bottom: 0, left: '50%', marginLeft: `-${SLOT / 2}px` }}
+                    animate={{ x: offset * SLOT, scale: sc, opacity: op, y: yDrop }}
+                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    {/* Can image */}
+                    <div className="relative w-full h-full">
+                      <Image
+                        src={flavor.img}
+                        alt={flavor.name}
+                        fill
+                        className="object-contain"
+                        sizes="300px"
+                        priority={flavor.num === '01'}
+                      />
+                    </div>
+
+                    {/* Glow platform — only on active */}
+                    {isActive && (
+                      <motion.div
+                        className="absolute pointer-events-none"
+                        style={{
+                          bottom: '-12px',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          width: '180%',
+                          height: '48px',
+                          background: `radial-gradient(ellipse at center, rgba(${flavor.colorRgb},0.7) 0%, transparent 68%)`,
+                          filter: 'blur(10px)',
+                        }}
+                        initial={{ opacity: 0, scaleX: 0.4 }}
+                        animate={{ opacity: 1, scaleX: 1 }}
+                        transition={{ duration: 0.6 }}
+                      />
+                    )}
+                  </motion.div>
+                )
+              })}
+            </div>
+
+            {/* Active flavor info */}
+            <div className="flex flex-col items-center text-center" style={{ marginTop: '36px', gap: '10px' }}>
+              <AnimatePresence mode="wait">
+                <motion.h3
+                  key={current.name}
+                  className="font-black uppercase leading-none"
+                  style={{
+                    fontSize: 'clamp(2rem, 4vw, 4.5rem)',
+                    letterSpacing: '-0.025em',
+                    color: current.color,
+                  }}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  {current.name}
+                </motion.h3>
+              </AnimatePresence>
+
+              <motion.p
+                style={{
+                  fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
+                  fontSize: '9px',
+                  letterSpacing: '0.22em',
+                  color: 'rgba(255,255,255,0.28)',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Fuel for the Fearless
+              </motion.p>
+
+              {/* Stats chips */}
+              <div className="flex items-center gap-5 mt-2">
+                {STATS.map((s, i) => (
+                  <span
+                    key={s}
+                    style={{
+                      fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
+                      fontSize: '8px',
+                      letterSpacing: '0.14em',
+                      color: i === 0 ? current.color : 'rgba(255,255,255,0.35)',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    {i > 0 && <span style={{ marginRight: '20px', color: 'rgba(255,255,255,0.12)' }}>·</span>}
+                    {s}
+                  </span>
+                ))}
+              </div>
+
+              {/* CTA */}
+              <motion.a
+                href={current.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center mt-4 px-10 py-3.5 font-bold tracking-widest uppercase text-black"
+                style={{
+                  fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
+                  fontSize: '9px',
+                  letterSpacing: '0.15em',
+                  background: current.color,
+                }}
+                whileHover={{ scale: 1.05, boxShadow: `0 0 32px rgba(${current.colorRgb},0.55)` }}
+                whileTap={{ scale: 0.97 }}
+              >
+                Shop Now →
+              </motion.a>
+            </div>
+
+            {/* Progress dots */}
+            <div className="flex items-center gap-2.5 absolute bottom-9">
+              {flavors.map((f, i) => (
+                <motion.div
+                  key={f.name}
+                  className="rounded-full"
+                  animate={{
+                    width: i === activeIdx ? 28 : 6,
+                    height: 6,
+                    background: i === activeIdx ? f.color : 'rgba(255,255,255,0.18)',
+                  }}
+                  transition={{ duration: 0.3 }}
+                />
+              ))}
+            </div>
           </motion.div>
 
-          {/* Progress dots */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2.5">
-            {flavors.map((f, i) => (
-              <motion.div
-                key={f.name}
-                className="rounded-full"
-                animate={{
-                  width: i === activeIdx ? 28 : 6,
-                  height: 6,
-                  background: i === activeIdx ? f.color : 'rgba(255,255,255,0.2)',
-                }}
-                transition={{ duration: 0.3 }}
-              />
-            ))}
-          </div>
         </div>
       </div>
     </section>
-  )
-}
-
-type Flavor = typeof flavors[number]
-
-function FlavorSlide({ flavor, isActive }: { flavor: Flavor; isActive: boolean }) {
-  const dividerStyle = {
-    height: '1px',
-    background: `rgba(${flavor.colorRgb}, 0.22)`,
-    marginBottom: '14px',
-  } as const
-
-  return (
-    <div
-      className="relative flex-shrink-0 flex flex-col"
-      style={{ width: '100vw', height: '100vh', background: '#050507' }}
-    >
-      {/* TOP HEADER */}
-      <div
-        className="flex items-end justify-between flex-shrink-0"
-        style={{ padding: '56px 64px 24px' }}
-      >
-        <motion.h2
-          className="font-black uppercase text-white leading-none"
-          style={{ fontSize: 'clamp(2rem, 4.5vw, 6rem)', letterSpacing: '-0.03em' }}
-          animate={{ opacity: isActive ? 1 : 0.1, x: isActive ? 0 : -28 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        >
-          Fuel for the Fearless
-        </motion.h2>
-
-        <motion.span
-          style={{
-            fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-            fontSize: '10px',
-            letterSpacing: '0.22em',
-            color: flavor.color,
-            textTransform: 'uppercase',
-            flexShrink: 0,
-          }}
-          animate={{ opacity: isActive ? 1 : 0.4 }}
-          transition={{ duration: 0.5 }}
-        >
-          {flavor.num} / {String(flavors.length).padStart(2, '0')}
-        </motion.span>
-      </div>
-
-      {/* BODY */}
-      <div className="flex flex-1 overflow-hidden" style={{ paddingBottom: '56px' }}>
-
-        {/* LEFT — can image */}
-        <div
-          className="relative flex items-center justify-center"
-          style={{ width: '52%', paddingLeft: '48px', paddingRight: '24px' }}
-        >
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: `radial-gradient(ellipse 75% 60% at 50% 50%, rgba(${flavor.colorRgb},0.15) 0%, transparent 68%)`,
-            }}
-          />
-          <motion.div
-            className="relative w-full"
-            style={{ maxWidth: '520px', aspectRatio: '1.45 / 1' }}
-            animate={{ opacity: isActive ? 1 : 0.18, scale: isActive ? 1 : 0.92 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <Image
-              src={flavor.img}
-              alt={flavor.name}
-              fill
-              className="object-contain"
-              sizes="45vw"
-              priority={flavor.num === '01'}
-            />
-          </motion.div>
-        </div>
-
-        {/* RIGHT — stats */}
-        <div
-          className="flex flex-col justify-center"
-          style={{ width: '48%', paddingRight: '64px', paddingLeft: '16px' }}
-        >
-          <motion.div
-            className="font-black uppercase leading-none"
-            style={{
-              fontSize: 'clamp(1.6rem, 3vw, 3.6rem)',
-              letterSpacing: '-0.02em',
-              color: flavor.color,
-              marginBottom: '20px',
-            }}
-            animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 16 }}
-            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {flavor.name}
-          </motion.div>
-
-          <motion.div
-            className="font-black uppercase"
-            style={{
-              fontSize: 'clamp(1.1rem, 2vw, 2rem)',
-              letterSpacing: '0.06em',
-              color: '#ffffff',
-              marginBottom: '16px',
-            }}
-            animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 12 }}
-            transition={{ duration: 0.5, delay: 0.06 }}
-          >
-            Zero Sugar
-          </motion.div>
-
-          {STATS.map((stat, i) => (
-            <div key={stat.label}>
-              <div style={dividerStyle} />
-              <motion.div
-                className="flex flex-col"
-                style={{ marginBottom: '14px' }}
-                animate={{ opacity: isActive ? 1 : 0, x: isActive ? 0 : 18 }}
-                transition={{ duration: 0.5, delay: 0.1 + i * 0.07 }}
-              >
-                <span
-                  className="font-black"
-                  style={{
-                    fontSize: 'clamp(1.6rem, 3vw, 3rem)',
-                    color: flavor.color,
-                    lineHeight: 1,
-                    letterSpacing: '-0.01em',
-                  }}
-                >
-                  {stat.val}
-                </span>
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-                    fontSize: '8px',
-                    letterSpacing: '0.18em',
-                    color: 'rgba(255,255,255,0.42)',
-                    textTransform: 'uppercase',
-                    marginTop: '3px',
-                  }}
-                >
-                  {stat.label}
-                </span>
-              </motion.div>
-            </div>
-          ))}
-
-          <div style={dividerStyle} />
-
-          <motion.div
-            className="flex items-center justify-between"
-            style={{ marginTop: '4px' }}
-            animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 10 }}
-            transition={{ duration: 0.5, delay: 0.38 }}
-          >
-            <Image
-              src="https://www.eljefe.com/cdn/shop/files/El_Jefe_Energy_logo-white_transparent.png"
-              alt="El Jefe Energy"
-              width={90}
-              height={32}
-              style={{ objectFit: 'contain', objectPosition: 'left' }}
-            />
-            <motion.a
-              href={flavor.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center px-7 py-3 font-bold tracking-widest uppercase text-black"
-              style={{
-                fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-                fontSize: '9px',
-                letterSpacing: '0.14em',
-                background: flavor.color,
-              }}
-              whileHover={{ scale: 1.04, boxShadow: `0 0 30px rgba(${flavor.colorRgb},0.5)` }}
-              whileTap={{ scale: 0.97 }}
-            >
-              Shop Now →
-            </motion.a>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Ghost watermark */}
-      <div
-        className="absolute bottom-4 right-6 select-none pointer-events-none"
-        style={{
-          fontFamily: "var(--font-syne, 'Syne', sans-serif)",
-          fontSize: 'clamp(4rem, 11vw, 13rem)',
-          fontWeight: 900,
-          letterSpacing: '-0.04em',
-          color: 'transparent',
-          WebkitTextStroke: `1px rgba(${flavor.colorRgb},0.07)`,
-          lineHeight: 1,
-          whiteSpace: 'nowrap',
-        }}
-      >
-        {flavor.short}
-      </div>
-    </div>
   )
 }
