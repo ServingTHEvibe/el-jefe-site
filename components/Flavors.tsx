@@ -95,6 +95,11 @@ const STATS = [
   { val: '150 MG',  label: 'Caffeine' },
 ]
 
+// Intro phase gets its own 90vh before slides begin
+const INTRO_VH = 90
+const SLIDE_VH = 90
+const TOTAL_VH = INTRO_VH + flavors.length * SLIDE_VH
+
 export default function Flavors() {
   const desktopRef = useRef<HTMLDivElement>(null)
   const [winW, setWinW] = useState(1440)
@@ -112,16 +117,38 @@ export default function Flavors() {
     offset: ['start start', 'end end'],
   })
 
+  // introEnd = the fraction of total scroll where slides begin
+  const introEnd = INTRO_VH / TOTAL_VH
+
+  // Slides only translate after the intro phase is done
   const rawX = useTransform(
     scrollYProgress,
-    [0, 1],
-    [0, -(flavors.length - 1) * winW],
+    [0, introEnd, 1],
+    [0, 0, -(flavors.length - 1) * winW],
   )
   const x = useSpring(rawX, { stiffness: 55, damping: 22, mass: 1.2 })
-  const scrollHintOpacity = useTransform(scrollYProgress, [0, 0.04], [1, 0])
 
+  // "Pick Your Weapon" header: visible during intro, fades as slides start
+  const headerOpacity = useTransform(
+    scrollYProgress,
+    [0, introEnd * 0.55, introEnd * 0.9],
+    [1, 1, 0],
+  )
+
+  // Scroll hint fades immediately
+  const scrollHintOpacity = useTransform(scrollYProgress, [0, introEnd * 0.3], [1, 0])
+
+  // Track which flavor slide is active (only valid after intro ends)
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
-    const idx = Math.min(Math.max(Math.round(v * (flavors.length - 1)), 0), flavors.length - 1)
+    if (v <= introEnd) {
+      setActiveIdx(0)
+      return
+    }
+    const slideProgress = (v - introEnd) / (1 - introEnd)
+    const idx = Math.min(
+      Math.max(Math.round(slideProgress * (flavors.length - 1)), 0),
+      flavors.length - 1,
+    )
     setActiveIdx(idx)
   })
 
@@ -130,7 +157,7 @@ export default function Flavors() {
   return (
     <section id="flavors" className="relative" style={{ background: '#050507' }}>
 
-      {/* MOBILE: card grid */}
+      {/* ── MOBILE ───────────────────────────────────────────── */}
       <div className="block md:hidden py-24 px-8">
         <div className="mb-14 flex flex-col gap-5">
           <span className="text-xs font-bold tracking-widest uppercase" style={{ color: '#E8001D' }}>
@@ -190,15 +217,15 @@ export default function Flavors() {
         </motion.a>
       </div>
 
-      {/* DESKTOP: horizontal scroll */}
+      {/* ── DESKTOP ──────────────────────────────────────────── */}
       <div
         ref={desktopRef}
         className="hidden md:block relative"
-        style={{ height: `${flavors.length * 90}vh` }}
+        style={{ height: `${TOTAL_VH}vh` }}
       >
         <div className="sticky top-0 h-screen overflow-hidden">
 
-          {/* Ambient glow — cross-fades per flavor */}
+          {/* Ambient glow — cross-fades per active flavor */}
           <motion.div
             key={current.color}
             className="absolute inset-0 z-0 pointer-events-none"
@@ -206,11 +233,98 @@ export default function Flavors() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.9 }}
             style={{
-              background: `radial-gradient(ellipse 65% 55% at 30% 55%, rgba(${current.colorRgb},0.12) 0%, transparent 65%)`,
+              background: `radial-gradient(ellipse 65% 55% at 30% 55%, rgba(${current.colorRgb},0.11) 0%, transparent 65%)`,
             }}
           />
 
-          {/* Horizontal slide track */}
+          {/* ── PICK YOUR WEAPON — intro overlay ──────────────── */}
+          <motion.div
+            className="absolute inset-0 z-20 flex flex-col justify-center pointer-events-none"
+            style={{ opacity: headerOpacity, padding: '0 64px' }}
+          >
+            <motion.span
+              className="block font-bold tracking-widest uppercase mb-5"
+              style={{
+                fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
+                fontSize: '10px',
+                letterSpacing: '0.22em',
+                color: '#E8001D',
+              }}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+            >
+              The Lineup
+            </motion.span>
+
+            <motion.h2
+              className="font-black uppercase leading-none"
+              style={{ fontSize: 'clamp(4rem, 9vw, 11rem)', letterSpacing: '-0.03em' }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <span className="text-white block">Pick Your</span>
+              <span
+                className="block"
+                style={{
+                  background: 'linear-gradient(135deg, #E8001D 0%, #D4AF37 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
+                Weapon
+              </span>
+            </motion.h2>
+
+            <motion.p
+              className="mt-8 max-w-sm"
+              style={{
+                fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
+                fontSize: '15px',
+                fontWeight: 300,
+                color: 'rgba(255,255,255,0.35)',
+                lineHeight: 1.75,
+              }}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.4 }}
+            >
+              8 flavors. Zero sugar. 150mg caffeine.<br />
+              Each one built to hit different.
+            </motion.p>
+
+            {/* Scroll hint */}
+            <motion.div
+              className="flex items-center gap-3 mt-14"
+              style={{ opacity: scrollHintOpacity }}
+            >
+              <motion.span
+                style={{ color: 'rgba(255,255,255,0.28)', fontSize: '18px' }}
+                animate={{ x: [0, 10, 0] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                →
+              </motion.span>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
+                  fontSize: '8px',
+                  letterSpacing: '0.18em',
+                  color: 'rgba(255,255,255,0.2)',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Scroll to explore
+              </span>
+            </motion.div>
+          </motion.div>
+
+          {/* ── HORIZONTAL SLIDE TRACK ────────────────────────── */}
           <motion.div
             className="flex h-full relative z-10"
             style={{ x, width: `${flavors.length * 100}vw` }}
@@ -239,31 +353,6 @@ export default function Flavors() {
               />
             ))}
           </div>
-
-          {/* Scroll hint */}
-          <motion.div
-            className="absolute bottom-8 right-14 z-30 flex items-center gap-3"
-            style={{ opacity: scrollHintOpacity }}
-          >
-            <motion.span
-              style={{ color: 'rgba(255,255,255,0.3)', fontSize: '18px' }}
-              animate={{ x: [0, 10, 0] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              →
-            </motion.span>
-            <span
-              style={{
-                fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-                fontSize: '8px',
-                letterSpacing: '0.18em',
-                color: 'rgba(255,255,255,0.22)',
-                textTransform: 'uppercase',
-              }}
-            >
-              Scroll to explore
-            </span>
-          </motion.div>
         </div>
       </div>
     </section>
@@ -317,7 +406,7 @@ function FlavorSlide({ flavor, isActive }: { flavor: Flavor; isActive: boolean }
       {/* BODY */}
       <div className="flex flex-1 overflow-hidden" style={{ paddingBottom: '56px' }}>
 
-        {/* LEFT — can product shot */}
+        {/* LEFT — can image */}
         <div
           className="relative flex items-center justify-center"
           style={{ width: '52%', paddingLeft: '48px', paddingRight: '24px' }}
@@ -345,12 +434,11 @@ function FlavorSlide({ flavor, isActive }: { flavor: Flavor; isActive: boolean }
           </motion.div>
         </div>
 
-        {/* RIGHT — stats panel */}
+        {/* RIGHT — stats */}
         <div
           className="flex flex-col justify-center"
           style={{ width: '48%', paddingRight: '64px', paddingLeft: '16px' }}
         >
-          {/* Flavor name */}
           <motion.div
             className="font-black uppercase leading-none"
             style={{
@@ -365,7 +453,6 @@ function FlavorSlide({ flavor, isActive }: { flavor: Flavor; isActive: boolean }
             {flavor.name}
           </motion.div>
 
-          {/* Zero Sugar */}
           <motion.div
             className="font-black uppercase"
             style={{
@@ -380,7 +467,6 @@ function FlavorSlide({ flavor, isActive }: { flavor: Flavor; isActive: boolean }
             Zero Sugar
           </motion.div>
 
-          {/* Stat rows */}
           {STATS.map((stat, i) => (
             <div key={stat.label}>
               <div style={dividerStyle} />
@@ -417,10 +503,8 @@ function FlavorSlide({ flavor, isActive }: { flavor: Flavor; isActive: boolean }
             </div>
           ))}
 
-          {/* Final divider */}
           <div style={dividerStyle} />
 
-          {/* Logo + CTA */}
           <motion.div
             className="flex items-center justify-between"
             style={{ marginTop: '4px' }}
