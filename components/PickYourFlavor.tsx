@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 
 const SHOP = 'https://www.eljefe.com/collections/energy-drinks'
 
@@ -9,6 +10,7 @@ const flavors = [
     id: 'mailo-tamarindo',
     name: 'Mailo Tamarindo',
     image: 'https://www.eljefe.com/cdn/shop/files/EJE_two_shot_2048_Mailo_Tamarindo.jpg',
+    local: false,
     accent: '#A0522D',
     bgGlow: 'rgba(160,82,45,0.4)',
     caffeine: '150mg',
@@ -21,6 +23,7 @@ const flavors = [
     id: 'killer-peach',
     name: 'Killer Peach',
     image: '/flavor-killer-peach.png',
+    local: true,
     accent: '#FF6B35',
     bgGlow: 'rgba(255,107,53,0.38)',
     caffeine: '150mg',
@@ -33,6 +36,7 @@ const flavors = [
     id: 'phantom-lemonade',
     name: 'Phantom Lemon',
     image: 'https://www.eljefe.com/cdn/shop/files/EJE_two_shot_phantom_lemonade.jpg',
+    local: false,
     accent: '#D4AF37',
     bgGlow: 'rgba(212,175,55,0.38)',
     caffeine: '150mg',
@@ -45,6 +49,7 @@ const flavors = [
     id: 'sinister-razz',
     name: 'Sinister Razz',
     image: '/flavor-sinister-razz.png',
+    local: true,
     accent: '#C71585',
     bgGlow: 'rgba(199,21,133,0.38)',
     caffeine: '150mg',
@@ -57,6 +62,7 @@ const flavors = [
     id: 'diablo-punch',
     name: 'Diablo Punch',
     image: '/flavor-diablo-punch.png',
+    local: true,
     accent: '#E8001D',
     bgGlow: 'rgba(232,0,29,0.4)',
     caffeine: '150mg',
@@ -69,6 +75,7 @@ const flavors = [
     id: 'zuma-watermelon',
     name: 'Zuma Watermelon',
     image: '/flavor-zuma-watermelon.png',
+    local: true,
     accent: '#22C55E',
     bgGlow: 'rgba(34,197,94,0.38)',
     caffeine: '150mg',
@@ -81,6 +88,7 @@ const flavors = [
     id: 'baja-orange',
     name: 'Baja Orange',
     image: '/flavor-baja-orange.png',
+    local: true,
     accent: '#FF6B00',
     bgGlow: 'rgba(255,107,0,0.38)',
     caffeine: '150mg',
@@ -93,6 +101,7 @@ const flavors = [
     id: 'wild-mango',
     name: 'Wild Mango',
     image: '/flavor-wild-mango.png',
+    local: true,
     accent: '#F59E0B',
     bgGlow: 'rgba(245,158,11,0.38)',
     caffeine: '150mg',
@@ -102,6 +111,33 @@ const flavors = [
     notes: ['Mango', 'Tropical fire', 'Fearless finish'],
   },
 ]
+
+function FlavorImage({ src, alt, fill, width, height, className, style }: {
+  src: string
+  alt: string
+  fill?: boolean
+  width?: number
+  height?: number
+  className?: string
+  style?: React.CSSProperties
+}) {
+  const isExternal = src.startsWith('http')
+  if (fill) {
+    return isExternal
+      ? <Image src={src} alt={alt} fill className={className} style={style} sizes="580px" />
+      : <Image src={src} alt={alt} fill className={className} style={style} sizes="580px" />
+  }
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={width ?? 64}
+      height={height ?? 44}
+      className={className}
+      style={style}
+    />
+  )
+}
 
 export default function PickYourFlavor() {
   const [selected, setSelected] = useState(flavors[0])
@@ -125,7 +161,15 @@ export default function PickYourFlavor() {
                 onClick={() => setSelected(f)}
                 style={{ '--accent': f.accent, '--glow': f.bgGlow } as React.CSSProperties}
               >
-                <img src={f.image} alt={f.name} />
+                <div className="pf-thumb-img">
+                  <Image
+                    src={f.image}
+                    alt={f.name}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    sizes="64px"
+                  />
+                </div>
                 <span>{f.name}</span>
               </button>
             ))}
@@ -137,7 +181,17 @@ export default function PickYourFlavor() {
               className="pf-glow"
               style={{ background: `radial-gradient(circle, ${selected.bgGlow} 0%, transparent 70%)` }}
             />
-            <img className="pf-can" src={selected.image} alt={selected.name} key={selected.id} />
+            <div key={selected.id} className="pf-can-wrap">
+              <Image
+                src={selected.image}
+                alt={selected.name}
+                fill
+                className="pf-can"
+                style={{ objectFit: 'contain' }}
+                sizes="(max-width: 640px) 90vw, 580px"
+                priority
+              />
+            </div>
           </div>
 
           {/* Stats card */}
@@ -167,7 +221,8 @@ export default function PickYourFlavor() {
               </ul>
             </div>
 
-            <a className="pf-cta" href={SHOP} target="_blank" rel="noopener noreferrer">
+            <a className="pf-cta" href={SHOP} target="_blank" rel="noopener noreferrer"
+               style={{ '--glow': selected.bgGlow } as React.CSSProperties}>
               Shop {selected.name} →
             </a>
           </div>
@@ -214,11 +269,7 @@ export default function PickYourFlavor() {
           gap: 24px;
           align-items: center;
         }
-        .pf-rail {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
+        .pf-rail { display: flex; flex-direction: column; gap: 10px; }
         .pf-thumb {
           border: 1px solid rgba(255,255,255,0.07);
           background: rgba(255,255,255,0.02);
@@ -230,11 +281,11 @@ export default function PickYourFlavor() {
           flex-direction: column;
           align-items: center;
           gap: 6px;
-          color: rgba(255,255,255,0.55);
-          font-size: 10px;
+          color: rgba(255,255,255,0.5);
+          font-size: 9px;
           font-family: var(--font-mono, 'JetBrains Mono', monospace);
           text-transform: uppercase;
-          letter-spacing: 0.08em;
+          letter-spacing: 0.06em;
           line-height: 1.2;
           text-align: center;
         }
@@ -244,15 +295,17 @@ export default function PickYourFlavor() {
           color: #fff;
           background: rgba(255,255,255,0.04);
         }
-        .pf-thumb img {
-          width: 64px;
-          height: 44px;
-          object-fit: cover;
+        .pf-thumb-img {
+          position: relative;
+          width: 72px;
+          height: 46px;
           border-radius: 8px;
+          overflow: hidden;
+          flex-shrink: 0;
         }
         .pf-stage {
           position: relative;
-          min-height: 680px;
+          height: 680px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -268,15 +321,13 @@ export default function PickYourFlavor() {
           pointer-events: none;
           transition: background 0.6s ease;
         }
-        .pf-can {
+        .pf-can-wrap {
           position: relative;
-          width: min(100%, 580px);
-          max-height: 640px;
-          object-fit: contain;
-          z-index: 2;
-          filter: drop-shadow(0 24px 60px rgba(0,0,0,0.6));
+          width: 100%;
+          height: 100%;
           animation: pfFadeIn 0.4s ease;
         }
+        .pf-can { filter: drop-shadow(0 24px 60px rgba(0,0,0,0.6)); }
         @keyframes pfFadeIn {
           from { opacity: 0; transform: translateY(12px) scale(0.97); }
           to   { opacity: 1; transform: translateY(0) scale(1); }
@@ -402,18 +453,17 @@ export default function PickYourFlavor() {
         .pf-cta:hover {
           filter: brightness(1.08);
           transform: translateY(-2px);
-          box-shadow: 0 8px 32px var(--glow, rgba(255,255,255,0.2));
+          box-shadow: 0 8px 32px var(--glow);
         }
         @media (max-width: 1100px) {
           .pf-main { grid-template-columns: 1fr; }
           .pf-rail { flex-direction: row; overflow-x: auto; padding-bottom: 8px; order: 2; }
           .pf-thumb { min-width: 90px; }
-          .pf-stage { min-height: 480px; order: 1; }
+          .pf-stage { height: 480px; order: 1; }
           .pf-card { order: 3; }
         }
         @media (max-width: 640px) {
-          .pf-stage { min-height: 360px; }
-          .pf-can { width: 90%; }
+          .pf-stage { height: 360px; }
         }
       `}</style>
     </section>
