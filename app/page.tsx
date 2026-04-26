@@ -8,7 +8,7 @@ import Manifesto from '@/components/Manifesto'
 import About from '@/components/About'
 import SocialProof from '@/components/SocialProof'
 import ProductSpotlight from '@/components/ProductSpotlight'
-import Flavors from '@/components/Flavors'
+import PickYourFlavor from '@/components/PickYourFlavor'
 import Merch from '@/components/Merch'
 import StoreLocator from '@/components/StoreLocator'
 import Footer from '@/components/Footer'
@@ -28,7 +28,7 @@ export default function Home() {
       <About />
       <SocialProof />
       <ProductSpotlight />
-      <Flavors />
+      <PickYourFlavor />
       <Merch />
       <StoreLocator />
       <Footer />
