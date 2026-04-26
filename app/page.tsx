@@ -1,9 +1,9 @@
-import dynamic from 'next/dynamic'
 import PageLoader from '@/components/PageLoader'
 import PromoBanner from '@/components/PromoBanner'
 import Nav from '@/components/Nav'
 import Hero from '@/components/Hero'
 import ScrollingCan from '@/components/ScrollingCan'
+import CanShowcaseClient from '@/components/CanShowcaseClient'
 import Manifesto from '@/components/Manifesto'
 import About from '@/components/About'
 import SocialProof from '@/components/SocialProof'
@@ -13,8 +13,6 @@ import Merch from '@/components/Merch'
 import StoreLocator from '@/components/StoreLocator'
 import Footer from '@/components/Footer'
 
-const CanShowcase = dynamic(() => import('@/components/CanShowcase'), { ssr: false })
-
 export default function Home() {
   return (
     <main className="bg-black">
@@ -23,7 +21,7 @@ export default function Home() {
       <Nav />
       <ScrollingCan />
       <Hero />
-      <CanShowcase />
+      <CanShowcaseClient />
       <Manifesto />
       <About />
       <SocialProof />
