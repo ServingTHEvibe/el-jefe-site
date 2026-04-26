@@ -5,7 +5,6 @@ import Hero from '@/components/Hero'
 import ScrollingCan from '@/components/ScrollingCan'
 import CanShowcaseClient from '@/components/CanShowcaseClient'
 import Manifesto from '@/components/Manifesto'
-import CanReel from '@/components/CanReel'
 import About from '@/components/About'
 import SocialProof from '@/components/SocialProof'
 import ProductSpotlight from '@/components/ProductSpotlight'
@@ -24,7 +23,6 @@ export default function Home() {
       <Hero />
       <CanShowcaseClient />
       <Manifesto />
-      <CanReel />
       <About />
       <SocialProof />
       <ProductSpotlight />
