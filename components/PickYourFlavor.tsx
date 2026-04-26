@@ -9,8 +9,8 @@ const flavors = [
   {
     id: 'mailo-tamarindo',
     name: 'Mailo Tamarindo',
-    image: 'https://www.eljefe.com/cdn/shop/files/EJE_two_shot_2048_Mailo_Tamarindo.jpg',
-    local: false,
+    image: '/flavor-mailo-tamarindo.webp',
+    local: true,
     accent: '#A0522D',
     bgGlow: 'rgba(160,82,45,0.4)',
     caffeine: '150mg',
@@ -35,8 +35,8 @@ const flavors = [
   {
     id: 'phantom-lemonade',
     name: 'Phantom Lemon',
-    image: 'https://www.eljefe.com/cdn/shop/files/EJE_two_shot_phantom_lemonade.jpg',
-    local: false,
+    image: '/flavor-phantom-lemon.webp',
+    local: true,
     accent: '#D4AF37',
     bgGlow: 'rgba(212,175,55,0.38)',
     caffeine: '150mg',
