@@ -221,7 +221,7 @@ function Scene() {
         polar={[-0.25, 0.25]}
         azimuth={[-Infinity, Infinity]}
         config={{ mass: 2, tension: 280 }}
-        snap={{ mass: 4, tension: 180 }}
+        snap={{ mass: 4, tension: 180 } as any}
       >
         <Float speed={1.6} rotationIntensity={0.06} floatIntensity={0.35}>
           <WildMangoCan />
